@@ -1,5 +1,5 @@
-import { Controller, Get, Logger } from '@nestjs/common';
-import { AppService } from '../services/app.service';
+import { Controller, Get, Logger } from '@nestjs/common'
+import { AppService } from '../services/app.service'
 
 @Controller()
 export class AppController {
@@ -7,8 +7,8 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    const t = 'faz';
-    Logger.debug('teste', { t });
-    return this.appService.getHello();
+    const t = 'faz'
+    Logger.debug('teste', { t })
+    return this.appService.getHello()
   }
 }
