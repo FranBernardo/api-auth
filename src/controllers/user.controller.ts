@@ -13,6 +13,16 @@ export class UserController {
     const response = await this.userService.createUser(data)
     return response
   }
+
+  @Post('/login')
+  @HttpCode(200)
+  async login(@Body() login: User){
+    const info = login
+    const response = await this.userService.login(info)
+    
+    return response
+  }
+
   @Get('check-connection')
   async checkConnection(): Promise<any> {
     try {
