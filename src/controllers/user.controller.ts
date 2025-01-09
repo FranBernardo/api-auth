@@ -19,7 +19,6 @@ export class UserController {
   async login(@Body() login: User){
     const info = login
     const response = await this.userService.login(info)
-    
     return response
   }
 

@@ -36,26 +36,24 @@ export class UserService {
   }
 
   async login(data: User) {
-    const isUser = await this.findUser(data.email)
-      if (!isUser) {
+    const User = await this.findUser(data.email)
+      if (!User) {
         throw new NotFoundException("user nao encontrado")
       }
 
-    const isPasswordSucesso = await bcrypt.compare(data.password, isUser.password)
+    const isPassword = await bcrypt.compare(data.password, User.password)
 
-    if(!isPasswordSucesso){
+    if(!isPassword){
       throw new NotFoundException("credencial invalida")
     }
-
-    const tokenLogin  = await genereteToken(isUser)
-    Logger.debug({tokenLogin})
-
+    const tokenLogin  = await genereteToken(User)
+    
     return {
       token: tokenLogin,
-      id: isUser._id,
-      name: isUser.userName,
-      email: isUser.email,
-      status: isUser.status
+      id: User._id,
+      name: User.userName,
+      email: User.email,
+      status: User.status
     }
     
   }
