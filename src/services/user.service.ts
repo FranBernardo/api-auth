@@ -1,10 +1,10 @@
 import { Injectable, Logger } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import * as bcrypt from "bcrypt"
-import { Error, Model } from "mongoose"
+import { Error, Model, Types } from "mongoose"
 import { NotFoundException } from "src/exceptions/not-found.exception"
 import { UnauthorizedException } from "src/exceptions/unauthorized.exception"
-import { User } from "src/interfaces/user.interface"
+import { UpedateUser, User } from "src/interfaces/user.interface"
 import { genereteToken } from "./auth.service"
 @Injectable()
 export class UserService {
@@ -12,16 +12,19 @@ export class UserService {
     @InjectModel("User", "projeto-auth") private userModel: Model<User>,
   ) {}
 
-  async findUser(email: string) {
+  async findUserEmail(email: string) {
     return await this.userModel.findOne({ email })
   }
 
+  async findUser(id: string){
+    return await this.userModel.findById({_id: id})
+  }
   async createUser(data: User) {
     try {
       const saltRounds = 10
       const salt = await bcrypt.genSalt(saltRounds)
       data.password = await bcrypt.hash(data.password, salt)
-      const isUser = await this.findUser(data.email)
+      const isUser = await this.findUserEmail(data.email)
       if (isUser) {
         throw new UnauthorizedException("user ja cadastrado")
       }
@@ -36,7 +39,7 @@ export class UserService {
   }
 
   async login(data: User) {
-    const User = await this.findUser(data.email)
+    const User = await this.findUserEmail(data.email)
       if (!User) {
         throw new NotFoundException("user nao encontrado")
       }
@@ -56,6 +59,21 @@ export class UserService {
       status: User.status
     }
     
+  }
+
+  async update(id: string, data: UpedateUser){
+    Logger.debug('data', data)
+
+    const user = await this.findUser(id)
+    if(!user){
+      throw new NotFoundException("user nao encontrado")
+    }
+
+    const updateUser = await this.userModel.updateOne(
+      {_id: id},
+      {$set: data}
+    )
+    return updateUser
   }
 
   async checkDatabaseConnection() {

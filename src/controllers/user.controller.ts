@@ -1,5 +1,5 @@
-import { Body, Controller, Get, HttpCode, Post } from "@nestjs/common"
-import { User } from "src/interfaces/user.interface"
+import { Body, Controller, Get, HttpCode, Logger, Param, Patch, Post, Put } from "@nestjs/common"
+import { UpedateUser, User } from "src/interfaces/user.interface"
 import { UserService } from "src/services/user.service"
 
 @Controller()
@@ -21,6 +21,16 @@ export class UserController {
     const response = await this.userService.login(info)
     return response
   }
+
+  @Patch('/update/:id')
+  @HttpCode(200)
+  async update(@Param('id') id: string, @Body() upedateUser: UpedateUser ){
+    const idUser = id
+    const data = upedateUser
+    const response = await this.userService.update(idUser, data)
+    Logger.debug('teste', idUser)
+    return response
+  } 
 
   @Get('check-connection')
   async checkConnection(): Promise<any> {
