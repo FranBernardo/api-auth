@@ -17,8 +17,10 @@ export class UserService {
   }
 
   async findUser(id: string){
-    return await this.userModel.findById({_id: id})
+    const response = await this.userModel.findById({_id: id})
+    return response
   }
+
   async createUser(data: User) {
     try {
       const saltRounds = 10

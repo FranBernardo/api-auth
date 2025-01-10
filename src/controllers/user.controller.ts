@@ -6,6 +6,9 @@ import { UserService } from "src/services/user.service"
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+
+  // ATE ROTAS PRIVADAS AQI
+  
   @Post("/create/user")
   @HttpCode(201)
   async create(@Body() user: User) {
@@ -25,12 +28,17 @@ export class UserController {
   @Patch('/update/:id')
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() upedateUser: UpedateUser ){
-    const idUser = id
-    const data = upedateUser
-    const response = await this.userService.update(idUser, data)
-    Logger.debug('teste', idUser)
+    const response = await this.userService.update(id, upedateUser)
     return response
-  } 
+  }
+
+  @Get('user/:id')
+  
+  @HttpCode(200)
+  async getUser(@Param('id') id: string){
+    const response = await this.userService.findUser(id)
+    return response
+  }
 
   @Get('check-connection')
   async checkConnection(): Promise<any> {
